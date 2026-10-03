@@ -2,6 +2,9 @@
 #include <string>
 #include "httplib.h"
 #include "json.hpp"
+#include "Tokenizer.h"
+#include "Calculator.h"
+#include "ExpressionParser.h"
 
 using json = nlohmann::json;
 
@@ -50,47 +53,86 @@ int main(void) {
     return 0;
 }
 
-void PostHandler(const httplib::Request& request, httplib::Response& response) {
+void PostHandler(
+    const httplib::Request& request,
+    httplib::Response& response
+) {
     response.set_header(
-    "Access-Control-Allow-Origin",
-    "http://127.0.0.1:5500"
+        "Access-Control-Allow-Origin",
+        "http://127.0.0.1:5500"
     );
-    // Check whether the body is valid JSON
+
+    // JSON 检查
     if (!json::accept(request.body)) {
         response.status = 400;
         response.set_content(
             R"({"error":"Invalid JSON"})",
             "application/json"
         );
-        std::cout << "Input:\n" << request.body << std::endl << "400 Error: Invalid JSON\n";
         return;
     }
 
     json data = json::parse(request.body);
-    // Check whether the data contain expression
-    if (!(data.contains("expression"))) {
+
+    if (!data.contains("expression")) {
         response.status = 400;
         response.set_content(
             R"({"error":"Missing Expression"})",
             "application/json"
         );
-        std::cout << "Input:\n" << data << std::endl << "400 Error: Missing Expression\n";
         return;
     }
-    if (!(data["expression"].is_string())) {
+
+    if (!data["expression"].is_string()) {
         response.status = 400;
         response.set_content(
             R"({"error":"Expression must be a string"})",
             "application/json"
         );
-        std::cout << "Input:\n" << data << std::endl << "400 Error: Expression must be a string\n";
         return;
     }
-    // 给Tokenizer做进一步处理
-    
-    response.set_content(
-        R"({"result":0})",
-        "application/json"
-    );
-    std::cout << "Expression: " << data["expression"] << std::endl;
+
+    std::string expression =
+        data["expression"].get<std::string>();
+
+
+    // ============================
+    // 真正的表达式计算
+    // ============================
+    try {
+        auto tokens =
+            Tokenizer::tokenize(expression);
+
+        auto postfix =
+            ExpressionParser::toPostfix(tokens);
+
+        double result =
+            Calculator::evaluate(postfix);
+
+
+        json resultJson = {
+            {"success", true},
+            {"result", result}
+        };
+
+        response.status = 200;
+        response.set_content(
+            resultJson.dump(),
+            "application/json"
+        );
+    }
+
+    catch (const std::exception& error) {
+
+        json errorJson = {
+            {"success", false},
+            {"error", error.what()}
+        };
+
+        response.status = 400;
+        response.set_content(
+            errorJson.dump(),
+            "application/json"
+        );
+    }
 }

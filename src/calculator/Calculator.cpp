@@ -21,7 +21,7 @@ double Calculator::evaluate(
         // ========================================
         // Number
         // ========================================
-        case TokenType::Number: {
+        case TokenKind::Number: {
 
             // token.text 现在还是字符串
             //
@@ -40,17 +40,17 @@ double Calculator::evaluate(
         // ========================================
         // Operators
         // ========================================
-        case TokenType::UnaryMiners:
-        case TokenType::UnaryPlus:
+        case TokenKind::UnaryMinus:
+        case TokenKind::UnaryPlus:
             if (numbers.empty()) {
                 throw std::runtime_error("Invalid Unary Expression");
             }
             else {
                 double result;
-                if (token.type == TokenType::UnaryMiners) {
+                if (token.type == TokenKind::UnaryMinus) {
                     result = -numbers.top();
                 }
-                if (token.type == TokenType::UnaryPlus) {
+                if (token.type == TokenKind::UnaryPlus) {
                     result = numbers.top();
                 }
                 numbers.pop();
@@ -59,10 +59,10 @@ double Calculator::evaluate(
             break;
 
 
-        case TokenType::Plus:
-        case TokenType::Minus:
-        case TokenType::Multiply:
-        case TokenType::Divide: {
+        case TokenKind::Plus:
+        case TokenKind::Minus:
+        case TokenKind::Multiply:
+        case TokenKind::Divide: {
 
             // 一个二元运算符必须需要两个操作数
             //
@@ -90,19 +90,19 @@ double Calculator::evaluate(
 
             switch (token.type) {
 
-            case TokenType::Plus:
+            case TokenKind::Plus:
                 result = left + right;
                 break;
 
-            case TokenType::Minus:
+            case TokenKind::Minus:
                 result = left - right;
                 break;
 
-            case TokenType::Multiply:
+            case TokenKind::Multiply:
                 result = left * right;
                 break;
 
-            case TokenType::Divide:
+            case TokenKind::Divide:
                 if (right == 0) {
                     throw std::runtime_error("Cannot divide by zero!");
                 }

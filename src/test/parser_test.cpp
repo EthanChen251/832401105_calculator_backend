@@ -7,28 +7,28 @@
 #include "../parser/ExpressionParser.h"
 
 
-std::string tokenTypeToString(TokenType type) {
+std::string TokenKindToString(TokenKind type) {
     switch (type) {
 
-    case TokenType::Number:
+    case TokenKind::Number:
         return "Number";
 
-    case TokenType::Plus:
+    case TokenKind::Plus:
         return "Plus";
 
-    case TokenType::Minus:
+    case TokenKind::Minus:
         return "Minus";
 
-    case TokenType::Multiply:
+    case TokenKind::Multiply:
         return "Multiply";
 
-    case TokenType::Divide:
+    case TokenKind::Divide:
         return "Divide";
 
-    case TokenType::LeftParen:
+    case TokenKind::LeftParen:
         return "LeftParen";
 
-    case TokenType::RightParen:
+    case TokenKind::RightParen:
         return "RightParen";
 
     default:
@@ -52,7 +52,7 @@ int main() {
 
         for (const auto& token : tokens) {
             std::cout
-                << tokenTypeToString(token.type)
+                << TokenKindToString(token.type)
                 << " : "
                 << token.text
                 << '\n';

@@ -13,16 +13,16 @@ enum class ParseState {
 static int precedence(Token token) {
     switch (token.type) {
 
-    case TokenType::Plus:
-    case TokenType::Minus:
+    case TokenKind::Plus:
+    case TokenKind::Minus:
         return 1;
 
-    case TokenType::Multiply:
-    case TokenType::Divide:
+    case TokenKind::Multiply:
+    case TokenKind::Divide:
         return 2;
 
-    case TokenType::UnaryMiners:
-    case TokenType::UnaryPlus:
+    case TokenKind::UnaryMinus:
+    case TokenKind::UnaryPlus:
         return 3;
 
     default:
@@ -58,7 +58,7 @@ std::vector<Token> ExpressionParser::toPostfix(
 
             switch (token.type) {
 
-            case TokenType::Number:
+            case TokenKind::Number:
                 // Number 直接进入后缀表达式
                 postfix.push_back(token);
 
@@ -67,7 +67,7 @@ std::vector<Token> ExpressionParser::toPostfix(
                 break;
 
 
-            case TokenType::LeftParen:
+            case TokenKind::LeftParen:
                 // 左括号进入运算符栈
                 operators.push(token);
                 parenDepth++;
@@ -76,15 +76,15 @@ std::vector<Token> ExpressionParser::toPostfix(
                 break;
 
 
-            case TokenType::Plus:
+            case TokenKind::Plus:
                 token.text = "u+";
-                token.type = TokenType::UnaryPlus;
+                token.type = TokenKind::UnaryPlus;
                 operators.push(token);
                 break;
 
-            case TokenType::Minus:
+            case TokenKind::Minus:
                 token.text = "u-";
-                token.type = TokenType::UnaryMiners;
+                token.type = TokenKind::UnaryMinus;
                 operators.push(token);
                 break;
 
@@ -105,10 +105,10 @@ std::vector<Token> ExpressionParser::toPostfix(
 
             switch (token.type) {
 
-            case TokenType::Plus:
-            case TokenType::Minus:
-            case TokenType::Multiply:
-            case TokenType::Divide:
+            case TokenKind::Plus:
+            case TokenKind::Minus:
+            case TokenKind::Multiply:
+            case TokenKind::Divide:
 
                 // 运算符后下一步需要 Operand
                 state = ParseState::ExpectOperand;
@@ -117,7 +117,7 @@ std::vector<Token> ExpressionParser::toPostfix(
                 // 就应该先计算栈顶，所以将它放进 postfix。
                 while (
                     !operators.empty() &&
-                    operators.top().type != TokenType::LeftParen &&
+                    operators.top().type != TokenKind::LeftParen &&
                     precedence(operators.top()) >= precedence(token)
                 ) {
                     postfix.push_back(operators.top());
@@ -131,7 +131,7 @@ std::vector<Token> ExpressionParser::toPostfix(
                 break;
 
 
-            case TokenType::RightParen:
+            case TokenKind::RightParen:
 
                 if (parenDepth == 0) {
                     throw std::runtime_error(
@@ -142,7 +142,7 @@ std::vector<Token> ExpressionParser::toPostfix(
                 // 把 '(' 之后的运算符全部送进 postfix
                 while (
                     !operators.empty() &&
-                    operators.top().type != TokenType::LeftParen
+                    operators.top().type != TokenKind::LeftParen
                 ) {
                     postfix.push_back(operators.top());
                     operators.pop();

@@ -16,27 +16,27 @@ std::vector<Token> Tokenizer::tokenize(const std::string& input) {
 
         case '+':
             temp.text = "+";
-            temp.type = TokenType::Plus;
+            temp.type = TokenKind::Plus;
             break;
         case '-':
             temp.text = "-";
-            temp.type = TokenType::Minus;
+            temp.type = TokenKind::Minus;
             break;
         case '*':
             temp.text = "*";
-            temp.type = TokenType::Multiply;
+            temp.type = TokenKind::Multiply;
             break;
         case '/':
             temp.text = "/";
-            temp.type = TokenType::Divide;
+            temp.type = TokenKind::Divide;
             break;
         case '(':
             temp.text = "(";
-            temp.type = TokenType::LeftParen;
+            temp.type = TokenKind::LeftParen;
             break;
         case ')':
             temp.text = ")";
-            temp.type = TokenType::RightParen;
+            temp.type = TokenKind::RightParen;
             break;
         default:
             if (current >= '0' && current <= '9') {
@@ -71,7 +71,7 @@ std::vector<Token> Tokenizer::tokenize(const std::string& input) {
                 // 还是因为已经到达字符串结尾
                 // 都在这里统一生成 Number Token
                 temp.text = numberText;
-                temp.type = TokenType::Number;
+                temp.type = TokenKind::Number;
                 tokens.push_back(temp);
                 continue;
             }

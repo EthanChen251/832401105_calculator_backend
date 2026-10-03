@@ -7,10 +7,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(calculator_backend
     src/main.cpp
+
+    src/parser/Tokenizer.cpp
+    src/parser/ExpressionParser.cpp
+
+    src/calculator/Calculator.cpp
 )
 
 target_include_directories(calculator_backend PRIVATE
     ${CMAKE_SOURCE_DIR}/third_party
+    ${CMAKE_SOURCE_DIR}/src/parser
+    ${CMAKE_SOURCE_DIR}/src/calculator
 )
 
 if(WIN32)

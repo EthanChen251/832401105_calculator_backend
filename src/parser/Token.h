@@ -2,7 +2,7 @@
 
 #include <string>
 
-enum class TokenType {
+enum class TokenKind {
     Number,
 
     Plus,
@@ -12,13 +12,13 @@ enum class TokenType {
     Divide,
 
     UnaryPlus,
-    UnaryMiners,
+    UnaryMinus,
 
     LeftParen,
     RightParen
 };
 
 struct Token {
-    TokenType type;
+    TokenKind type;
     std::string text;
 };
