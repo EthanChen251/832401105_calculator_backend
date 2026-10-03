@@ -40,6 +40,25 @@ double Calculator::evaluate(
         // ========================================
         // Operators
         // ========================================
+        case TokenType::UnaryMiners:
+        case TokenType::UnaryPlus:
+            if (numbers.empty()) {
+                throw std::runtime_error("Invalid Unary Expression");
+            }
+            else {
+                double result;
+                if (token.type == TokenType::UnaryMiners) {
+                    result = -numbers.top();
+                }
+                if (token.type == TokenType::UnaryPlus) {
+                    result = numbers.top();
+                }
+                numbers.pop();
+                numbers.push(result);
+            }
+            break;
+
+
         case TokenType::Plus:
         case TokenType::Minus:
         case TokenType::Multiply:

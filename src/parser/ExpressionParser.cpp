@@ -21,6 +21,10 @@ static int precedence(Token token) {
     case TokenType::Divide:
         return 2;
 
+    case TokenType::UnaryMiners:
+    case TokenType::UnaryPlus:
+        return 3;
+
     default:
         return 0;
     }
@@ -73,11 +77,17 @@ std::vector<Token> ExpressionParser::toPostfix(
 
 
             case TokenType::Plus:
+                token.text = "u+";
+                token.type = TokenType::UnaryPlus;
+                operators.push(token);
+                break;
+
             case TokenType::Minus:
-                // 暂时还没有实现一元 +/-。
-                throw std::runtime_error(
-                    "Unary operator is not implemented yet"
-                );
+                token.text = "u-";
+                token.type = TokenType::UnaryMiners;
+                operators.push(token);
+                break;
+
 
 
             default:

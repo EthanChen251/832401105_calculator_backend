@@ -4,10 +4,16 @@
 
 enum class TokenType {
     Number,
+
     Plus,
     Minus,
+
     Multiply,
     Divide,
+
+    UnaryPlus,
+    UnaryMiners,
+
     LeftParen,
     RightParen
 };
