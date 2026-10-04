@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(calculator_backend LANGUAGES CXX)
+project(calculator_backend LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -12,12 +12,17 @@ add_executable(calculator_backend
     src/parser/ExpressionParser.cpp
 
     src/calculator/Calculator.cpp
+    third_party/sqlite/sqlite3.c
+    src/database/Database.cpp
 )
 
 target_include_directories(calculator_backend PRIVATE
     ${CMAKE_SOURCE_DIR}/third_party
+    ${CMAKE_SOURCE_DIR}/third_party/sqlite
     ${CMAKE_SOURCE_DIR}/src/parser
     ${CMAKE_SOURCE_DIR}/src/calculator
+    ${CMAKE_SOURCE_DIR}/src/database
+
 )
 
 if(WIN32)
@@ -39,3 +44,14 @@ if(WIN32)
         crypt32
     )
 endif()
+
+add_executable(database_test
+    src/test/database_test.cpp
+    src/database/Database.cpp
+    third_party/sqlite/sqlite3.c
+)
+
+target_include_directories(database_test PRIVATE
+    ${CMAKE_SOURCE_DIR}/third_party/sqlite
+    ${CMAKE_SOURCE_DIR}/src/database
+)
